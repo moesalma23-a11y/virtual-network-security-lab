@@ -7,5 +7,6 @@ I used a console cable to configure the name and of the switch and common securi
 Then, I confirmed connectivity by pinging the switch from my PC, and reading the arp table from my pc to ensure it has the switches MAC learned. ![Connectivity](IMG_7421.jpeg)
 For now I will keep the switch seperate until I add on another NIC to my pc to allow the pfSense router im going to configure in virtualbox act as if it was on my actual network. 
 I downloaded and setup a virtual pfSense version and configured it, with virtualbox being simulated for the WAN, then pfSense as the firewall/router, then the LAN, which is  where I will place future VMs.  ![PfSense](pfsense_lab1.jpg)
-Acting has the "threat actor machine" will be a kali linux machine I set up through VirtualBox. ![Kali Linux](./Screenshot%202026-06-10%20131121.png)
+Acting as the "threat actor machine" will be a kali linux machine I set up through VirtualBox. ![Kali Linux](./Screenshot%202026-06-10%20131121.png)
+I added a windowws machine to be the victim in the lab and configured DHCP through pfsense to give both devices IP addresses and confirmed connectivity through ping ![Kali Linux + Windows](./kalilinux_windows.jpg)
 
