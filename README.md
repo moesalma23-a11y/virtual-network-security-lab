@@ -10,3 +10,18 @@ I downloaded and setup a virtual pfSense version and configured it, with virtual
 Acting as the "threat actor machine" will be a kali linux machine I set up through VirtualBox. ![Kali Linux](./Screenshot%202026-06-10%20131121.png)
 I added a windowws machine to be the victim in the lab and configured DHCP through pfsense to give both devices IP addresses and confirmed connectivity through ping ![Kali Linux + Windows](./kalilinux_windows.jpg)
 
+Lab #1: Blocking Unauthorized Network Reconnaissance with pfSense firewall
+Goal: Using pfSense to demonstrate how firewall rules can prevent an attacker from performing active reconnaissance against a windows workstation. 
+
+First I performed reconnaissance by directing an nmap scan to the victim machine to see which ports are open:![Screenshot](Screenshot%202026-06-24%20205141.png)
+
+
+After the traffic was allowed through pfSense I made a rule stating that all traffic from that subnet is to be blocked, which includes the Kali Linux machine: ![Screenshot](Screenshot%202026-06-24%20205310.png)
+
+
+
+Then, I attemped the nmap scan again after placing those rules: ![Screenshot](Screenshot%202026-06-24%20205158.png)
+
+In ths lab, I learned how to configure pfSense rules using it as a network firewall to segment traffic that flowed btween the Kali Linux and Windows virtual machines. I also learned how host based firewalls can differ from network based, as I had to disable the windows defender prior to this so I can use the pfSense firwall as the main firewall. 
+
+
