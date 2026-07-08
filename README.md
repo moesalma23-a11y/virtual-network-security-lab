@@ -24,6 +24,7 @@ After the traffic was allowed through pfSense I made a rule stating that all tra
 
 
 Then, I attemped the nmap scan again after placing those rules: ![Screenshot](Screenshot%202026-06-24%20205158.png)
+
 What I learned: 
 In ths lab, I learned how to configure pfSense rules using it as a network firewall to segment traffic that flowed btween the Kali Linux and Windows virtual machines. I also learned how host based firewalls can differ from network based, as I had to disable the windows defender prior to this so I can use the pfSense firwall as the main firewall. 
 
