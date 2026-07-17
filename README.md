@@ -244,7 +244,7 @@ portal.test → 192.168.50.20
 
 This represented the correct and authorized DNS record.
 
-![pfSense DNS Host Override](host_ovveride.png)
+![pfSense DNS Host Override](host_override.png)
 
 After applying the host override, entering the following address in the Windows browser loaded the legitimate IIS webpage:
 
