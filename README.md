@@ -176,5 +176,277 @@ Through this lab, I gained hands-on experience with:
 - Generating and analyzing IDS alerts
 - Performing reconnaissance using Nmap
 - Investigating suspicious SMB and protocol activity
+- # Lab 3: Simulating and Preventing a Rogue DNS Attack
+
+## Objective
+
+The goal of this lab was to simulate a rogue DNS attack in an isolated virtual environment. A Kali Linux machine was configured to act as an unauthorized DNS server that redirected a test domain to a different web server.
+
+After confirming that the redirection worked, I configured pfSense firewall rules to prevent Windows clients from communicating with unauthorized DNS servers.
+
+This lab demonstrated:
+
+- Legitimate DNS resolution
+- DNS host overrides
+- Rogue DNS redirection
+- DNS cache behavior
+- Unauthorized DNS prevention
+- Firewall log analysis
+
+---
+
+## Lab Environment
+
+The lab used the following systems:
+
+- **pfSense:** Firewall, router, and legitimate DNS resolver
+- **Kali Linux:** Rogue DNS server and Apache web server
+- **Windows 10:** Client and legitimate IIS web server
+- **VirtualBox:** Virtualization platform
+
+### Network Information
+
+```text
+pfSense LAN:       192.168.50.1
+Windows 10:        192.168.50.20
+pfSense OPT1:      192.168.20.1
+Kali Linux:        192.168.20.101
+Test domain:       portal.test
+```
+
+---
+
+## Phase 1: Configure the Legitimate Web Server
+
+I first enabled Internet Information Services on the Windows virtual machine. IIS provided a basic webpage that represented the legitimate destination for the test domain.
+
+I verified that the Windows web server was running by opening the loopback address in the Windows browser:
+
+```text
+http://127.0.0.1
+```
+
+The default IIS information page successfully loaded, confirming that the Windows machine was hosting a functional web service.
+
+![Windows IIS Web Server](info_web.png)
+
+---
+
+## Phase 2: Configure Legitimate DNS Resolution
+
+I configured a host override in the pfSense DNS Resolver.
+
+The override mapped the test domain to the Windows web server:
+
+```text
+portal.test → 192.168.50.20
+```
+
+This represented the correct and authorized DNS record.
+
+![pfSense DNS Host Override](host_ovveride.png)
+
+After applying the host override, entering the following address in the Windows browser loaded the legitimate IIS webpage:
+
+```text
+http://portal.test
+```
+
+This established the expected DNS behavior before introducing the rogue DNS server.
+
+---
+
+## Phase 3: Configure the Rogue Web Server
+
+I configured Apache on the Kali Linux machine to represent the unauthorized destination.
+
+The Kali web server was tested from the Windows machine by directly entering Kali's IP address:
+
+```text
+http://192.168.20.101
+```
+
+The Apache default webpage loaded successfully, confirming that Windows could reach the Kali web server across the segmented network.
+
+![Kali Apache Web Server](apache_test.png)
+
+---
+
+## Phase 4: Configure the Rogue DNS Server
+
+I installed and configured `dnsmasq` on Kali Linux.
+
+The rogue DNS configuration created an unauthorized record that mapped the same test domain to the Kali Linux address:
+
+```text
+portal.test → 192.168.20.101
+```
+
+This conflicted with the legitimate pfSense record, which pointed the domain to the Windows web server.
+
+I tested the rogue DNS record from Kali using the following command:
+
+```bash
+dig @192.168.20.101 portal.test
+```
+
+The response showed that the rogue DNS server returned the Kali Linux IP address.
+
+![Kali DNS Query Test](dig_test.png)
+
+---
+
+## Phase 5: Redirect the Windows Client
+
+To simulate a compromised or misconfigured client, I temporarily changed the Windows DNS server from pfSense to the Kali Linux machine:
+
+```text
+Authorized DNS server:   192.168.50.1
+Rogue DNS server:        192.168.20.101
+```
+
+I then cleared the Windows DNS cache:
+
+```cmd
+ipconfig /flushdns
+```
+
+After the cache was cleared, the domain resolved to the rogue address:
+
+```text
+portal.test → 192.168.20.101
+```
+
+When I entered `portal.test` in the Windows browser, the browser displayed Kali's Apache webpage instead of the legitimate Windows IIS page.
+
+![Rogue DNS Redirection](rogue_dns.png)
+
+This confirmed that the rogue DNS server successfully altered the destination associated with the domain.
+
+---
+
+## Phase 6: Prevent Unauthorized DNS Communication
+
+To prevent clients from using unauthorized DNS servers, I created firewall rules on the pfSense LAN interface.
+
+The rules were designed to:
+
+1. Allow LAN clients to send DNS requests to pfSense.
+2. Reject DNS requests sent to any other destination.
+3. Log rejected DNS traffic for investigation.
+
+The intended rule order was:
+
+```text
+PASS    LAN net → pfSense LAN address    TCP/UDP port 53
+REJECT  LAN net → Any                    TCP/UDP port 53
+PASS    LAN net → Any                    Other permitted traffic
+```
+
+The allow rule had to remain above the reject rule because pfSense processes firewall rules from top to bottom.
+
+---
+
+## Phase 7: Verify the Mitigation
+
+With Windows still configured to use Kali as its DNS server, I attempted another DNS lookup.
+
+The request failed because pfSense rejected communication from the Windows client to the unauthorized DNS server on port 53.
+
+The pfSense firewall logs showed rejected traffic with:
+
+```text
+Source:       192.168.50.20
+Destination:  192.168.20.101
+Port:         53
+Protocol:     DNS over TCP or UDP
+Action:       Reject
+```
+
+![Unauthorized DNS Rejected](unauthorized_dns.png)
+
+This confirmed that the firewall policy successfully prevented the Windows client from using the rogue DNS server.
+
+---
+
+## Restoring Legitimate DNS
+
+After verifying the mitigation, I restored the Windows DNS setting to the authorized pfSense resolver:
+
+```text
+192.168.50.1
+```
+
+I then cleared the DNS cache again:
+
+```cmd
+ipconfig /flushdns
+```
+
+The legitimate DNS server once again returned:
+
+```text
+portal.test → 192.168.50.20
+```
+
+Opening `portal.test` returned the Windows IIS webpage instead of Kali's Apache page.
+
+---
+
+## Results
+
+Before applying the defensive firewall rules:
+
+```text
+Windows client
+      ↓
+Kali rogue DNS server
+      ↓
+portal.test resolves to 192.168.20.101
+      ↓
+Kali Apache webpage loads
+```
+
+After applying the defensive firewall rules:
+
+```text
+Windows client
+      ↓
+Unauthorized DNS request to Kali
+      ↓
+Rejected by pfSense
+```
+
+Authorized DNS operation continued through pfSense:
+
+```text
+Windows client
+      ↓
+pfSense DNS Resolver
+      ↓
+portal.test resolves to 192.168.50.20
+      ↓
+Windows IIS webpage loads
+```
+
+---
+
+## What I Learned
+
+Through this lab, I gained hands-on experience with:
+
+- Configuring IIS and Apache web servers
+- Creating local DNS records using pfSense host overrides
+- Configuring `dnsmasq` as a DNS server
+- Testing DNS responses with `dig` and `nslookup`
+- Understanding how clients trust configured DNS resolvers
+- Simulating DNS redirection in an isolated network
+- Clearing the Windows DNS cache
+- Restricting DNS traffic with pfSense firewall rules
+- Understanding the importance of firewall rule order
+- Identifying rejected DNS traffic in firewall logs
+- Comparing legitimate and unauthorized DNS resolution
+
+This lab demonstrated that DNS security depends not only on the accuracy of DNS records, but also on controlling which DNS servers clients are permitted to use. By restricting DNS communication to an authorized resolver, pfSense prevented the Windows client from receiving altered records from the rogue Kali DNS server.
 
 This lab demonstrated the difference between a firewall and an intrusion detection system. While a firewall controls traffic flow, an IDS provides visibility into network activity and helps identify potentially malicious behavior for further investigation.
