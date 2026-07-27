@@ -449,4 +449,86 @@ Through this lab, I gained hands-on experience with:
 
 This lab demonstrated that DNS security depends not only on the accuracy of DNS records, but also on controlling which DNS servers clients are permitted to use. By restricting DNS communication to an authorized resolver, pfSense prevented the Windows client from receiving altered records from the rogue Kali DNS server.
 
+# Lab 4: Securing Physical Switch Access with pfSense
+
+## Objective
+
+The goal of this lab was to connect a physical Cisco switch to my virtual cybersecurity environment and use pfSense to control which systems could access it.
+
+The trusted Windows virtual machine was allowed to manage the switch, while the Kali Linux machine was blocked.
+
+---
+
+## Switch and VLAN Configuration
+
+I configured VLAN 10 for the home management network and VLAN 20 for the physical lab network.
+
+The switch received the management address `192.168.60.2`, and its default gateway was changed to the pfSense physical interface at `192.168.60.1`.
+
+![Switch Configuration](ssh_switch.png)
+
+---
+
+## LAN Firewall Rules
+
+I created rules on the pfSense LAN interface that allowed the trusted Windows virtual machine to ping and access the switch through SSH.
+
+![LAN Firewall Rules](LAN_RULES.png)
+
+---
+
+## Authorized Windows Access
+
+After applying the LAN rules, the Windows virtual machine successfully connected to the physical Cisco switch through SSH.
+
+![Windows SSH Access](SSH_WINDOWS.png)
+
+---
+
+## OPT1 Firewall Rules
+
+I created a block rule on the pfSense OPT1 interface to prevent the Kali Linux network from accessing the switch.
+
+![OPT1 Firewall Rules](OPT1_RULES.png)
+
+---
+
+## Unauthorized Kali Access
+
+Kali was unable to ping the switch, and the SSH port appeared as filtered during the scan.
+
+![Blocked Kali Access](kali_failping.png)
+
+---
+
+## Firewall Log Analysis
+
+The pfSense logs confirmed that traffic from Kali to the switch was blocked, including ping and SSH connection attempts.
+
+![Firewall Logs](firewall_logs.png)
+
+---
+
+## Results
+
+The final security policy produced the following results:
+
+- Windows VM access to the switch was allowed.
+- Kali Linux access to the switch was blocked.
+- pfSense logged the unauthorized connection attempts.
+
+---
+
+## What I Learned
+
+This lab gave me hands-on experience with:
+
+- Cisco VLAN configuration
+- Physical and virtual network integration
+- Switch management interfaces
+- pfSense firewall rules
+- Secure SSH access
+- Network segmentation
+- Firewall log analysis
+
 This lab demonstrated the difference between a firewall and an intrusion detection system. While a firewall controls traffic flow, an IDS provides visibility into network activity and helps identify potentially malicious behavior for further investigation.
