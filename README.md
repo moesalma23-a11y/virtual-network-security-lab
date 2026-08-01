@@ -531,4 +531,117 @@ This lab gave me hands-on experience with:
 - Network segmentation
 - Firewall log analysis
 
+# Lab 5: Configuring an 802.1Q Trunk with pfSense and a Cisco Switch
+
+## Objective
+
+The goal of this lab was to configure an 802.1Q trunk between pfSense and a physical Cisco switch. This allowed VLAN 20 and VLAN 30 to share one physical network interface and Ethernet cable while remaining logically separated.
+
+VLAN 20 was configured as the native VLAN, while VLAN 30 was used as the dedicated switch-management network.
+
+---
+
+## pfSense VLAN Configuration
+
+I created VLAN 30 on the physical pfSense interface connected to the Cisco switch.
+
+VLAN 30 used the following network:
+
+```text
+pfSense VLAN 30: 192.168.70.1
+Cisco switch:    192.168.70.2
+```
+
+![pfSense VLAN 30](VLAN_30.png)
+
+I then assigned VLAN 30 as a separate pfSense interface. The interface assignments show the virtual LAN, Kali network, physical network, and VLAN 30 management interface.
+
+![pfSense Interface Assignments](INTERFACE_ASSIGNMENTS.png)
+
+---
+
+## Cisco Trunk Configuration
+
+I converted the switch port connected to pfSense into an 802.1Q trunk.
+
+The trunk was configured to carry VLANs 20 and 30, with VLAN 20 acting as the native VLAN.
+
+```text
+VLAN 20: Native and untagged
+VLAN 30: Tagged management traffic
+```
+
+The trunk status was verified from the Cisco switch.
+
+![Cisco Trunk Configuration](CISCO_TRUNK.png)
+
+---
+
+## Firewall Rules
+
+Rules were created on the pfSense LAN interface to allow the trusted Windows virtual machine to ping and access the switch through SSH.
+
+![LAN Firewall Rules](LAN_RULES.png)
+
+Rules were also created on OPT1 to prevent the Kali Linux network from accessing the VLAN 30 management network.
+
+![Kali Firewall Rules](KALI_RULES.png)
+
+---
+
+## Authorized Windows Access
+
+The Windows virtual machine successfully connected to the Cisco switch using its VLAN 30 management address at `192.168.70.2`.
+
+From the Windows SSH session, I verified the VLAN configuration on the physical switch.
+
+![Windows Switch Access](CISCO_WINDOWS.png)
+
+---
+
+## Blocked Kali Access
+
+Kali Linux attempted to scan TCP port 22 on the switch management address.
+
+Nmap reported the SSH port as filtered, confirming that pfSense blocked Kali from reaching VLAN 30.
+
+![Kali Filtered SSH Scan](KALI_FILTERED.png)
+
+---
+
+## Verify 802.1Q Tagging
+
+I captured traffic on the physical trunk interface and opened the capture in Wireshark.
+
+The capture showed 802.1Q-tagged traffic using VLAN ID 30, confirming that VLAN 30 traffic was being carried over the trunk.
+
+![Wireshark 802.1Q Capture](WIRESHARK_CAPTURE.png)
+
+---
+
+## Results
+
+The completed configuration allowed:
+
+- VLAN 20 and VLAN 30 to share one physical interface.
+- Windows to access the switch management interface.
+- pfSense to route and filter traffic to VLAN 30.
+- Kali Linux to be blocked from the management VLAN.
+- Wireshark to verify the presence of 802.1Q VLAN tags.
+
+---
+
+## What I Learned
+
+Through this lab, I gained hands-on experience with:
+
+- Creating VLAN interfaces in pfSense
+- Configuring an 802.1Q trunk
+- Assigning a native VLAN
+- Carrying multiple VLANs over one physical interface
+- Creating a dedicated management VLAN
+- Applying firewall rules between networks
+- Verifying VLAN tags with Wireshark
+- Integrating virtual machines with a physical Cisco switch
+
 This lab demonstrated the difference between a firewall and an intrusion detection system. While a firewall controls traffic flow, an IDS provides visibility into network activity and helps identify potentially malicious behavior for further investigation.
