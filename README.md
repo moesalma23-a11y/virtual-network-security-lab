@@ -645,3 +645,124 @@ Through this lab, I gained hands-on experience with:
 - Integrating virtual machines with a physical Cisco switch
 
 This lab demonstrated the difference between a firewall and an intrusion detection system. While a firewall controls traffic flow, an IDS provides visibility into network activity and helps identify potentially malicious behavior for further investigation.
+
+# Lab 6: Comparing SSH and Telnet Traffic
+
+## Objective
+
+The goal of this lab was to compare encrypted SSH traffic with plaintext Telnet traffic.
+
+A Windows machine connected to a Kali Linux machine located on a different pfSense network interface. tcpdump was used on pfSense to capture the traffic, and Wireshark was used to analyze the saved PCAP files.
+
+```text
+Windows VM: 192.168.50.20
+        ↓
+      pfSense
+        ↓
+Kali Linux: 192.168.20.101
+```
+
+---
+
+## Linux Services
+
+I enabled SSH and Telnet on Kali Linux and confirmed that both services were listening.
+
+```text
+SSH:    TCP port 22
+Telnet: TCP port 23
+```
+
+![Kali SSH and Telnet Services](KALI_SERVICES.png)
+
+---
+
+## pfSense Firewall Rules
+
+I created pfSense firewall rules allowing the Windows machine to connect to Kali using SSH and Telnet.
+
+![pfSense Firewall Rules](PFSENSE_RULES.png)
+
+---
+
+## SSH Capture
+
+I started tcpdump on the pfSense LAN interface and saved the SSH traffic as a PCAP file.
+
+![SSH tcpdump Capture](TCPDUMP_SSH.png)
+
+The Windows machine successfully connected to Kali through SSH and ran several remote commands.
+
+![Windows SSH Session](WINDOWS_SSH.png)
+
+I opened the SSH capture in Wireshark and filtered for TCP port 22.
+
+Although the connection, protocol information, and encrypted packets were visible, the username, password, commands, and command output could not be read because SSH encrypts the session.
+
+![SSH Wireshark Analysis](SSH_WIRESHARK.png)
+
+---
+
+## Telnet Capture
+
+I started another tcpdump capture for Telnet traffic on TCP port 23.
+
+![Telnet tcpdump Capture](TCPDUMP_TELNET.png)
+
+The Windows machine then connected to Kali using Telnet and ran remote commands.
+
+![Windows Telnet Session](WINDOWS_TELNET.png)
+
+Using tcpdump with ASCII output showed readable Telnet session information because Telnet does not encrypt its traffic.
+
+![Telnet Plaintext in tcpdump](TELNET_TCPDUMP_PLAINTEXT.png)
+
+I opened the Telnet PCAP file in Wireshark and followed the TCP stream.
+
+The username, commands, responses, and other session information were visible in plaintext.
+
+![Telnet Wireshark Analysis](TELNET_WIRESHARK.png)
+
+---
+
+## Cleanup
+
+After completing the lab, I disabled and removed Telnet, deleted the temporary account, removed the packet captures, and confirmed that port 23 was no longer listening.
+
+![Lab Cleanup](CLEANUP.png)
+
+---
+
+## Results
+
+This lab demonstrated the security difference between SSH and Telnet:
+
+```text
+SSH
+- Uses TCP port 22
+- Encrypts remote-access traffic
+- Commands and credentials are not readable in Wireshark
+
+Telnet
+- Uses TCP port 23
+- Sends traffic in plaintext
+- Commands and session information can be viewed in tcpdump and Wireshark
+```
+
+---
+
+## What I Learned
+
+Through this lab, I learned how to:
+
+- Enable SSH and Telnet services on Linux
+- Remotely access Linux from a Windows machine
+- Allow remote-access traffic through pfSense
+- Capture traffic with tcpdump
+- Save packet captures as PCAP files
+- Download and open PCAP files in Wireshark
+- Apply Wireshark display filters
+- Follow TCP streams
+- Compare encrypted SSH traffic with plaintext Telnet traffic
+
+This lab demonstrated why SSH should be used instead of Telnet for secure remote administration.
