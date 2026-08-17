@@ -766,3 +766,112 @@ Through this lab, I learned how to:
 - Compare encrypted SSH traffic with plaintext Telnet traffic
 
 This lab demonstrated why SSH should be used instead of Telnet for secure remote administration.
+# Lab 7: 802.1X Authentication with FreeRADIUS
+
+## Objective
+
+The goal of this lab was to configure **802.1X port-based authentication** on a Cisco switch.
+
+A physical laptop acted as the **supplicant**, the Cisco switch acted as the **authenticator**, and Kali Linux hosted the **FreeRADIUS authentication server**.
+
+```text
+Laptop
+   │
+   │ EAPOL
+   ▼
+Cisco Switch
+   │
+   │ RADIUS
+   ▼
+pfSense
+   │
+   ▼
+Kali Linux
+FreeRADIUS
+```
+
+---
+
+## FreeRADIUS Server
+
+I configured FreeRADIUS on Kali Linux and started it in debug mode so I could monitor authentication requests from the Cisco switch.
+
+![FreeRADIUS Ready](FREERADIUS_READY.PNG)
+
+---
+
+## Cisco 802.1X Configuration
+
+I enabled AAA and 802.1X on the Cisco switch and configured the laptop's physical switchport to require authentication.
+
+The laptop remained on VLAN 20, but the port would not allow normal network access until authentication was successful.
+
+![Cisco 802.1X Configuration](CISCO_8021X_CONFIG.png)
+
+---
+
+## Failed Authentication
+
+I first attempted to connect using incorrect credentials.
+
+The Cisco switch forwarded the authentication request to FreeRADIUS, which rejected the login.
+
+![802.1X Authentication Failure](AUTH_FAILURE.PNG)
+
+---
+
+## EAPOL Packet Capture
+
+I captured the authentication traffic with Wireshark and filtered for EAPOL traffic.
+
+This showed the 802.1X communication between the laptop and the Cisco switch.
+
+![EAPOL Packet Capture](EAPOL_CAPTURE.PNG)
+
+---
+
+## Successful Authentication
+
+I then authenticated using the correct credentials.
+
+FreeRADIUS accepted the authentication request, the Cisco switch authorized the port, and the laptop was able to access the network.
+
+![Successful 802.1X Authentication](AUTH_SUCCSESFUL.jpg)
+
+---
+
+## Results
+
+The lab demonstrated the difference between failed and successful 802.1X authentication:
+
+```text
+Incorrect Credentials
+        ↓
+RADIUS Reject
+        ↓
+Switchport Unauthorized
+
+
+Correct Credentials
+        ↓
+RADIUS Accept
+        ↓
+Switchport Authorized
+        ↓
+Network Access
+```
+
+---
+
+## What I Learned
+
+Through this lab, I learned how to:
+
+- Configure 802.1X authentication on a Cisco switchport
+- Configure FreeRADIUS on Kali Linux
+- Understand the supplicant, authenticator, and authentication server roles
+- Use RADIUS for centralized authentication
+- Understand the difference between EAPOL and RADIUS traffic
+- Capture EAPOL traffic with Wireshark
+- Observe failed and successful authentication attempts
+- Restrict physical network access until authentication succeeds
