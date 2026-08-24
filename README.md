@@ -875,3 +875,70 @@ Through this lab, I learned how to:
 - Capture EAPOL traffic with Wireshark
 - Observe failed and successful authentication attempts
 - Restrict physical network access until authentication succeeds
+
+# Lab 8: Remote Access VPN with pfSense and OpenVPN
+
+## Objective
+
+The goal of this lab was to configure a remote access VPN using pfSense and OpenVPN. The VPN allowed my physical laptop to securely access the Kali Linux network through an encrypted tunnel.
+
+## Network Setup
+
+- pfSense acted as the VPN server and firewall.
+- Kali Linux was located on the `192.168.20.0/24` network.
+- OpenVPN used the `10.8.0.0/24` tunnel network.
+- The physical laptop connected through normal Wi-Fi.
+- VirtualBox port forwarding allowed OpenVPN traffic to reach the pfSense WAN interface.
+
+## Before VPN Connection
+
+Before connecting to OpenVPN, the physical laptop could not reach the Kali Linux machine at `192.168.20.101`.
+
+![Before VPN Connection](BEFORE_VPN.png)
+
+## VirtualBox Port Forwarding
+
+Because the pfSense WAN interface was behind VirtualBox NAT, UDP port `1194` was forwarded from the host machine to the pfSense WAN interface.
+
+![VirtualBox VPN Port Forward](VIRTUALBOX_VPN_FORWARD.PNG)
+
+## pfSense OpenVPN Configuration
+
+OpenVPN was configured on pfSense using:
+
+- UDP port `1194`
+- VPN tunnel network `10.8.0.0/24`
+- Protected network `192.168.20.0/24`
+- User authentication and certificates
+- OpenVPN firewall rules
+
+![pfSense OpenVPN Configuration](PFSENSE_OPENVPN.PNG)
+
+## Successful VPN Connection
+
+After importing the `.ovpn` configuration file into the OpenVPN client, the laptop successfully connected to pfSense.
+
+The laptop received a VPN address from the `10.8.0.0/24` network and could now communicate with Kali Linux at `192.168.20.101`.
+
+![Successful VPN Connection](VPN_SUCCESS.png)
+
+## Encrypted VPN Traffic
+
+Wireshark was used on the laptop's Wi-Fi interface to inspect the traffic.
+
+Instead of seeing the original ICMP traffic to Kali Linux, the Wi-Fi interface showed encrypted OpenVPN traffic using UDP port `1194`.
+
+![Encrypted VPN Traffic](VPN_ENCRYPTED_TRAFFIC.png)
+
+## What I Learned
+
+- How to configure a remote access VPN using pfSense and OpenVPN.
+- How to configure VirtualBox NAT port forwarding.
+- How to create a certificate authority, server certificate, and VPN user.
+- How to export and import an OpenVPN `.ovpn` client configuration.
+- How VPN clients receive a separate virtual IP address.
+- How routes are pushed to VPN clients for protected internal networks.
+- How split tunneling allows normal Internet traffic to continue using Wi-Fi while lab traffic uses the VPN.
+- How VPN traffic is encrypted and encapsulated before traveling across the physical network.
+- How pfSense decrypts VPN traffic and routes it to the correct internal network.
+- How firewall rules control what VPN clients are allowed to access.
