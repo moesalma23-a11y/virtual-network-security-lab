@@ -942,3 +942,65 @@ Instead of seeing the original ICMP traffic to Kali Linux, the Wi-Fi interface s
 - How VPN traffic is encrypted and encapsulated before traveling across the physical network.
 - How pfSense decrypts VPN traffic and routes it to the correct internal network.
 - How firewall rules control what VPN clients are allowed to access.
+
+# Wazuh SIEM Deployment and Windows Monitoring
+
+## Objective
+
+The goal of this lab was to deploy a Wazuh SIEM on an Ubuntu Server VM and connect my Windows 10 VM as an agent.
+
+This allowed me to collect and view Windows security events from one centralized dashboard.
+
+## Network Setup
+
+The Wazuh server was placed on the same VirtualBox internal network as my Windows 10 VM.
+
+Both devices are on the `192.168.50.0/24` network.
+
+![Wazuh LAN Setup](WAZUH_LAN.png)
+
+## Wazuh Installation
+
+I installed the Wazuh all-in-one deployment on Ubuntu Server.
+
+This includes the Wazuh manager, indexer, and dashboard.
+
+![Wazuh Setup](WAZUH_SETUP.png)
+
+## Wazuh Dashboard
+
+After the installation finished, I accessed the Wazuh dashboard from my Windows 10 VM.
+
+The dashboard gives one central location to view connected agents, security events, and alerts.
+
+![Wazuh Dashboard](WAZUH_DASHBOARD.png)
+
+## Windows 10 Agent
+
+I installed the Wazuh agent on my Windows 10 VM and connected it to the Wazuh server.
+
+The Windows machine then appeared as an active agent in the SIEM.
+
+![Wazuh Agent](WAZUH_AGENT.png)
+
+## Threat Detection Test
+
+To test the SIEM, I generated an incorrect login attempt on the Windows VM.
+
+Wazuh collected the Windows security event and displayed the login failure in the Threat Hunting dashboard.
+
+![Wazuh Threat Detection](WAZUH_THREAT.png)
+
+## What I Learned
+
+- How a SIEM collects and centralizes security logs.
+- How Wazuh agents send endpoint events to the SIEM.
+- How Windows security events can be viewed in Wazuh.
+- The difference between endpoint monitoring with Wazuh and network monitoring with Suricata.
+- How multiple virtual machines can communicate on the same VirtualBox internal network.
+
+## Result
+
+The Wazuh SIEM was successfully deployed and the Windows 10 VM was connected as an active agent.
+
+Wazuh successfully detected and displayed a failed Windows login event in the Threat Hunting dashboard.
