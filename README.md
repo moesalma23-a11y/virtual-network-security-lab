@@ -943,7 +943,7 @@ Instead of seeing the original ICMP traffic to Kali Linux, the Wi-Fi interface s
 - How pfSense decrypts VPN traffic and routes it to the correct internal network.
 - How firewall rules control what VPN clients are allowed to access.
 
-# Wazuh SIEM Deployment and Windows Monitoring
+# Lab 9: Wazuh SIEM Deployment and Windows Monitoring
 
 ## Objective
 
