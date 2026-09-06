@@ -1004,3 +1004,62 @@ Wazuh collected the Windows security event and displayed the login failure in th
 The Wazuh SIEM was successfully deployed and the Windows 10 VM was connected as an active agent.
 
 Wazuh successfully detected and displayed a failed Windows login event in the Threat Hunting dashboard.
+
+
+# Lab 10: Reverse Shell RAT Lab
+
+## Objective
+
+The goal of this lab was to demonstrate how a reverse shell can give an attacker remote command-line access to a Windows system and how a firewall rule can stop the connection.
+
+## Payload Creation
+
+A reverse shell payload was created in Kali Linux.
+
+![Kali Payload](KALI_PAYLOAD.png)
+
+## Reverse Shell Program
+
+The payload was used with a program designed to create the reverse shell connection.
+
+![Shell EXE](SHELL_EXE.png)
+
+## Payload Download
+
+The payload was hosted from Kali using an HTTP server and then downloaded onto the Windows machine.
+
+![Shellcode Download](shellcode_download.png)
+
+## Reverse Shell Access
+
+After the payload was executed, Kali received a reverse shell and gained access to the Windows command prompt.
+
+![Kali RAT](KALI_RAT.png)
+
+## Verify the Connection
+
+The Windows `netstat` command was used to confirm the active connection over port 4444.
+
+![Netstat Connection](NETSTAT_CMD.png)
+
+## Firewall Mitigation
+
+A pfSense firewall rule was created to prevent the Windows system from initiating the reverse shell connection over port 4444.
+
+![Firewall Rule](FIREWALL_RULE_RAT.png)
+
+Because a reverse shell is initiated from the victim machine back toward the attacker, blocking that outbound connection prevents the shell from being established.
+
+## Failed Reverse Shell Test
+
+After the firewall rule was enabled, the reverse shell connection failed.
+
+![RAT Failed](RAT_FAIL.png)
+
+## What I Learned
+
+- How reverse shells establish connections from a victim system back to an attacker
+- How to verify an active network connection using `netstat`
+- How port 4444 was used for the reverse shell connection
+- How pfSense firewall rules can block unwanted outbound connections
+- How firewall filtering can prevent a reverse shell from successfully connecting
