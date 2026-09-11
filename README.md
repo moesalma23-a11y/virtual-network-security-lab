@@ -1063,3 +1063,81 @@ After the firewall rule was enabled, the reverse shell connection failed.
 - How port 4444 was used for the reverse shell connection
 - How pfSense firewall rules can block unwanted outbound connections
 - How firewall filtering can prevent a reverse shell from successfully connecting
+
+# Lab 11 - Aruba Wireless Access Point Deployment
+
+## Objective
+
+The goal of this lab was to add a physical Aruba wireless access point to my existing home lab network and verify that wireless devices could successfully connect to the network, receive an IP address, and communicate with the router.
+
+## Network Topology
+
+The Aruba access point was added to the existing home lab network through the Cisco switch.
+
+![Network Topology](TOPOLOGY.jpeg)
+
+## Console Access to the Aruba AP
+
+I connected to the Aruba access point through its console port using PuTTY and the COM3 serial connection. This allowed me to directly access the AP for initial setup and troubleshooting.
+
+![Aruba Console Access](PUTTY_AP.png)
+
+## Aruba AP Configuration
+
+After connecting the access point to the network, I accessed its web management interface and configured the wireless network settings.
+
+![Aruba AP Setup](AP_SETUP.png)
+
+## DHCP Lease
+
+The Aruba AP successfully received a management IP address from the pfSense DHCP server. I verified the lease through the pfSense interface.
+
+![AP DHCP Lease](AP_LEASE.png)
+
+The AP uses this IP address for management, while wireless clients connected to the AP receive their own separate IP addresses.
+
+## Wireless Client Connectivity
+
+I connected my physical laptop wirelessly to the Aruba access point. The laptop successfully received an IP address and was able to ping the router, confirming that the wireless connection was working correctly.
+
+![Wireless Connectivity](CONNECTIVITY.jpeg)
+
+## Network Path
+
+The wireless traffic followed this path:
+
+```text
+Physical Laptop
+      |
+      | Wi-Fi
+      v
+Aruba Access Point
+      |
+      | Ethernet
+      v
+Cisco Switch
+      |
+      v
+pfSense
+      |
+      +--> DHCP
+      +--> Routing
+      +--> Firewall
+      +--> Internet
+```
+
+## What I Learned
+
+- How to deploy a physical wireless access point into an existing network
+- How to access an Aruba AP using a serial console connection through PuTTY
+- How to configure an Aruba AP through its web management interface
+- How an access point receives its own management IP address
+- How pfSense can provide DHCP addressing to physical network devices
+- How wireless clients receive their own separate IP addresses
+- How an access point bridges wireless clients onto the wired network
+- How to verify wireless connectivity using IP configuration and ping tests
+- How the access point, Cisco switch, and pfSense work together to provide wireless network access
+
+## Result
+
+The Aruba access point was successfully integrated into the home lab. The AP received a management IP address from pfSense, and the physical laptop was able to connect wirelessly, receive an IP address, and successfully communicate with the network gateway.
