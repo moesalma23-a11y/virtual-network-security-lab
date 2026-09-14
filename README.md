@@ -1141,3 +1141,104 @@ pfSense
 ## Result
 
 The Aruba access point was successfully integrated into the home lab. The AP received a management IP address from pfSense, and the physical laptop was able to connect wirelessly, receive an IP address, and successfully communicate with the network gateway.
+
+# Lab 12 - Guest Wi-Fi VLAN Segmentation and Captive Portal
+
+## Objective
+
+The goal of this lab was to create a dedicated guest wireless network using the Aruba access point, place guest clients into their own VLAN, isolate that network from protected lab resources, and require users to authenticate through a pfSense captive portal before gaining web access.
+
+## Cisco VLAN and AP Trunk Configuration
+
+VLAN 40 was created on the Cisco switch for the guest wireless network.
+
+The Aruba AP switch port was configured as a trunk so the AP could carry multiple VLANs over the same physical connection.
+
+![Cisco AP Trunk](CISCO_AP_TRUNK.png)
+
+This allowed the AP to use separate VLANs for management and wireless client traffic.
+
+## Aruba Management VLAN
+
+The Aruba AP management interface was moved to the dedicated management network.
+
+The AP master IP was configured as:
+
+```text
+192.168.70.3
+```
+
+This places AP management traffic inside the management VLAN instead of the normal wireless client network.
+
+![Aruba Management VLAN](ARUBA_MANAGMENT_VLAN.png)
+
+## Wireless SSID and VLAN Assignment
+
+The Aruba AP was configured with separate wireless networks and VLAN assignments.
+
+The guest SSID was mapped to VLAN 40 so guest devices would receive addressing from the dedicated guest subnet instead of the normal lab network.
+
+![Aruba VLAN SSIDs](ARUBA_VLAN_SSIDS.png)
+
+The AP bridges client traffic into the correct VLAN while pfSense handles DHCP, routing, firewall policy, and Internet access.
+
+## Guest Firewall Rules
+
+Firewall rules were configured on the pfSense guest interface to control where guest devices could communicate.
+
+The guest network was restricted from accessing protected internal lab networks while still being allowed to reach required services and the Internet after authentication.
+
+![Guest Firewall Rules](GUEST_RULES.png)
+
+This provides network segmentation between guest wireless users and internal lab resources.
+
+## Captive Portal Authentication
+
+A captive portal was enabled on the guest network.
+
+After connecting to the guest Wi-Fi, the laptop received an IP address but normal web browsing was not available until the captive portal login was completed.
+
+![Captive Portal Login](IMG_7674.jpeg)
+
+The access process was:
+
+```text
+Connect to Guest Wi-Fi
+        ↓
+Receive VLAN 40 IP address
+        ↓
+Web browsing blocked
+        ↓
+Captive portal login page
+        ↓
+User authentication
+        ↓
+Internet access allowed
+```
+
+This demonstrated that simply connecting to the wireless network was not enough to gain Internet access.
+
+## What I Learned
+
+- How to create a dedicated guest wireless VLAN
+- How to configure a Cisco trunk to carry multiple VLANs to an access point
+- How to map Aruba wireless SSIDs to specific VLANs
+- How to separate AP management traffic from wireless client traffic
+- How to place the Aruba AP management interface inside a dedicated management VLAN
+- How pfSense can provide DHCP and routing for wireless VLANs
+- How to use firewall rules to isolate guest users from protected internal networks
+- How a captive portal controls Internet access after a client joins the wireless network
+- How captive portal authentication is separate from Wi-Fi association
+- How VLAN tagging, switching, routing, firewalling, and wireless networking work together in an enterprise-style design
+
+## Result
+
+The guest wireless network was successfully deployed on VLAN 40.
+
+Wireless clients connected through the Aruba AP were placed into the guest network and isolated from protected internal resources by pfSense firewall rules.
+
+The Aruba AP management interface remained on the dedicated management network at `192.168.70.3`.
+
+Guest devices could connect to the wireless network and receive an IP address, but web browsing remained unavailable until the user successfully authenticated through the pfSense captive portal.
+
+After successful captive portal authentication, Internet access was granted while internal network segmentation remained enforced.
