@@ -1242,3 +1242,102 @@ The Aruba AP management interface remained on the dedicated management network a
 Guest devices could connect to the wireless network and receive an IP address, but web browsing remained unavailable until the user successfully authenticated through the pfSense captive portal.
 
 After successful captive portal authentication, Internet access was granted while internal network segmentation remained enforced.
+
+# Lab 13 - Metasploitable 2 Vulnerability Lab
+
+## Objective
+
+The goal of this lab was to deploy a Metasploitable 2 virtual machine, scan it from Kali Linux, identify a vulnerable FTP service, and gain root access in a controlled lab environment.
+
+## Metasploitable Network Setup
+
+I attached the Metasploitable 2 virtual machine to my LAN1 network in VirtualBox.
+
+LAN1 uses:
+
+```text
+192.168.50.0/24
+```
+
+![Metasploitable LAN Configuration](LAN_ATTACHED.png)
+
+## Metasploitable Virtual Machine
+
+The Metasploitable 2 VM was added to VirtualBox.
+
+![Metasploitable VM](METASPLOIT.png)
+
+## IP Address
+
+After starting Metasploitable, I used:
+
+```bash
+ip a
+```
+
+to verify its IP address.
+
+The VM was using:
+
+```text
+192.168.50.25
+```
+
+![Metasploitable IP](IP_METASPLOIT.png)
+
+## Kali Laptop Connection
+
+My Kali Linux laptop was connected to LAB-WIFI on VLAN 20.
+
+![LAB-WIFI](LAB_WIFI20.png)
+
+## Nmap Scan
+
+From Kali Linux, I ran:
+
+```bash
+nmap -sV 192.168.50.25
+```
+
+This showed the open ports, services, and service versions running on Metasploitable.
+
+![Nmap Scan](IMG_7693.jpeg)
+
+One of the services found was the legacy **vsftpd 2.3.4** FTP service on port 21.
+
+After researching the version, I found that it contained a known backdoor vulnerability.
+
+## FTP Vulnerability
+
+I connected to the FTP service using Netcat:
+
+```bash
+nc 192.168.50.25 21
+```
+
+The vulnerable version could be triggered using a specially crafted FTP username containing a smiley face.
+
+After the backdoor was triggered, another listening port became available and I connected to it using Netcat.
+
+This gave me root-level shell access to the Metasploitable machine.
+
+![Root Access](IMG_7694.jpeg)
+
+## What I Learned
+
+- How to deploy a vulnerable virtual machine in VirtualBox
+- How to place a VM on a specific network
+- How to use `ip a` to check Linux IP addressing
+- How to use `nmap -sV` to identify services and software versions
+- How vulnerable legacy services can create serious security risks
+- How Netcat can be used to connect directly to TCP services
+- How the vulnerable vsftpd 2.3.4 service could lead to root access
+- Why patching and removing outdated services is important
+
+## Result
+
+Metasploitable 2 was successfully deployed on the `192.168.50.0/24` network.
+
+The Kali Linux laptop was able to scan the system, identify the vulnerable FTP service, and demonstrate the known vsftpd 2.3.4 backdoor vulnerability.
+
+The lab successfully showed how service enumeration and vulnerability research can lead to root-level access in an intentionally vulnerable environment.
