@@ -1341,3 +1341,74 @@ Metasploitable 2 was successfully deployed on the `192.168.50.0/24` network.
 The Kali Linux laptop was able to scan the system, identify the vulnerable FTP service, and demonstrate the known vsftpd 2.3.4 backdoor vulnerability.
 
 The lab successfully showed how service enumeration and vulnerability research can lead to root-level access in an intentionally vulnerable environment.
+# Lab 14 - Active Directory Domain and Group Policy
+
+## Objective
+
+The goal of this lab was to configure a Windows Server as an Active Directory Domain Controller, join a physical laptop to the domain, and apply a Group Policy Object to the laptop.
+
+## Network Topology
+
+The lab topology included the Windows Server, pfSense, and the physical laptop.
+
+![Lab Topology](IMG_0014.jpeg)
+
+## Windows Server Network Setup
+
+The Windows Server VM was attached to the LAN network in VirtualBox so it could communicate with the rest of the lab.
+
+![Windows Server LAN](WINDOWS_SERVER.png)
+
+I then configured the server with a static IP address and configured the DNS server address.
+
+![Static IP Configuration](STATIC_IP.png)
+
+Using a static address ensures that the Domain Controller keeps a predictable IP address for domain and DNS services.
+
+## Active Directory Domain Controller
+
+I installed Active Directory Domain Services on Windows Server and promoted the server to a Domain Controller.
+
+![Domain Controller Setup](DOMAIN_CONTROLLER.png)
+
+This allowed the server to centrally manage domain users, computers, DNS, and Group Policy.
+
+## Laptop Domain Join
+
+The physical laptop was successfully joined to the Active Directory domain.
+
+After restarting the laptop, the Windows login screen displayed the **Other user** option, allowing a domain account to sign in.
+
+![Domain Laptop Login](IMG_0012.jpeg)
+
+## Group Policy
+
+I created and applied a Group Policy Object to restrict access to Control Panel on the domain-connected laptop.
+
+![Laptop Group Policy](GPO_LAPTOP.png)
+
+After the policy was applied, the laptop was unable to access Control Panel.
+
+![Control Panel Blocked](IMG_0013.jpeg)
+
+## What I Learned
+
+Through this lab, I learned how to:
+
+- Configure a static IP address on Windows Server
+- Install Active Directory Domain Services
+- Promote a Windows Server to a Domain Controller
+- Use Active Directory DNS
+- Join a physical Windows laptop to a domain
+- Manage domain users and computers
+- Create and apply Group Policy Objects
+- Use Active Directory for centralized device management
+- Apply security restrictions to domain-connected computers
+
+## Result
+
+The Windows Server was successfully configured as an Active Directory Domain Controller.
+
+The physical laptop successfully joined the domain and was able to sign in using a domain account.
+
+A Group Policy Object was then applied to the laptop, successfully preventing access to Control Panel and demonstrating centralized management through Active Directory.
