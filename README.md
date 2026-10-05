@@ -3,6 +3,7 @@
 
 ## Featured Projects
 
+- [Lab 3 - Rogue DNS Attack and Mitigation](#lab-3-simulating-and-preventing-a-rogue-dns-attack)
 - [Lab 5 - 802.1Q VLAN Trunking and Network Segmentation](#lab-5-configuring-an-8021q-trunk-with-pfsense-and-a-cisco-switch)
 - [Lab 8 - Remote Access VPN with pfSense and OpenVPN](#lab-8-remote-access-vpn-with-pfsense-and-openvpn)
 - [Lab 9 - Wazuh SIEM and Windows Monitoring](#lab-9-wazuh-siem-deployment-and-windows-monitoring)
