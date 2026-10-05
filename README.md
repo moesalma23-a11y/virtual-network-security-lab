@@ -1439,7 +1439,7 @@ The Cisco switch was added to NPS as a RADIUS client.
 
 This allowed the switch to send authentication requests to the Windows Server.
 
-![RADIUS Client](RADIUS_CLIENT.png)
+![RADIUS Client](RAIDUS_CLIENT.png)
 
 ## NPS Network Policy
 
