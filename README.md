@@ -3,12 +3,13 @@
 
 ## Featured Projects
 
-- Active Directory, DNS, and Group Policy
-- 802.1X Authentication with Cisco, NPS, and Active Directory
-- 802.1Q VLAN Trunking and Network Segmentation
-- Remote Access VPN with pfSense and OpenVPN
-- Guest Wi-Fi VLAN Segmentation and Captive Portal
-- Wazuh SIEM and Windows Endpoint Monitoring
+- [Lab 5 - 802.1Q VLAN Trunking and Network Segmentation](#lab-5-configuring-an-8021q-trunk-with-pfsense-and-a-cisco-switch)
+- [Lab 8 - Remote Access VPN with pfSense and OpenVPN](#lab-8-remote-access-vpn-with-pfsense-and-openvpn)
+- [Lab 9 - Wazuh SIEM and Windows Monitoring](#lab-9-wazuh-siem-deployment-and-windows-monitoring)
+- [Lab 12 - Guest Wi-Fi VLAN Segmentation and Captive Portal](#lab-12---guest-wi-fi-vlan-segmentation-and-captive-portal)
+- [Lab 14 - Active Directory Domain and Group Policy](#lab-14---active-directory-domain-and-group-policy)
+- [Lab 15 - 802.1X Authentication with NPS and Active Directory](#lab-15---8021x-authentication-with-nps-and-active-directory)
+
 
 ## Technologies Used
 
