@@ -1412,3 +1412,70 @@ The Windows Server was successfully configured as an Active Directory Domain Con
 The physical laptop successfully joined the domain and was able to sign in using a domain account.
 
 A Group Policy Object was then applied to the laptop, successfully preventing access to Control Panel and demonstrating centralized management through Active Directory.
+
+# Lab 15 - 802.1X Authentication with NPS and Active Directory
+
+## Objective
+
+The goal of this lab was to configure wired 802.1X authentication using a Cisco switch, Windows Network Policy Server (NPS), and Active Directory.
+
+The physical laptop acted as the supplicant, the Cisco switch acted as the authenticator, and NPS handled RADIUS authentication using Active Directory user accounts.
+
+## Network Topology
+
+The lab topology included the domain-joined laptop, Cisco switch, pfSense, and Windows Server running Active Directory and NPS.
+
+![Lab Topology](IMG_0032.jpeg)
+
+## NPS Installation
+
+I installed Network Policy Server on the Windows Server so it could act as the RADIUS server for 802.1X authentication.
+
+![NPS Installation](NPS_INSTALL.png)
+
+## RADIUS Client
+
+The Cisco switch was added to NPS as a RADIUS client.
+
+This allowed the switch to send authentication requests to the Windows Server.
+
+![RADIUS Client](RADIUS_CLIENT.png)
+
+## NPS Network Policy
+
+I created an NPS policy that allowed authorized Active Directory users to authenticate using their domain credentials.
+
+![NPS Policy](NPS_POLICY.png)
+
+## Cisco 802.1X Configuration
+
+The laptop switchport was configured to use 802.1X authentication before allowing normal network access.
+
+![Cisco 802.1X Configuration](SWITCHPORT_SSH.png)
+
+## Windows 802.1X Configuration
+
+IEEE 802.1X authentication was enabled on the laptop's Ethernet adapter.
+
+![Windows 802.1X Configuration](DOT1X.jpeg)
+
+## Network Connection
+
+After configuring the laptop, switch, and NPS server, the laptop connected to the network and received its network configuration.
+
+![NPS Connection](CONNECT_NPS.jpeg)
+
+
+## What I Learned
+
+- How to install and configure Windows Network Policy Server
+- How to configure a Cisco switch as a RADIUS client
+- How 802.1X controls access to a physical switchport
+- How NPS integrates with Active Directory
+- How domain credentials can be used for network authentication
+- The roles of the supplicant, authenticator, RADIUS server, and Active Directory
+- How EAPOL and RADIUS are used during 802.1X authentication
+
+## Result
+
+The lab demonstrated how 802.1X, Cisco switching, NPS, and Active Directory can work together to provide centralized network authentication for a domain-connected Windows laptop.
