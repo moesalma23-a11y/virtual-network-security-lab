@@ -1,5 +1,22 @@
 # Virtual Network Security Lab Setup
 
+
+## Featured Projects
+
+- Active Directory, DNS, and Group Policy
+- 802.1X Authentication with Cisco, NPS, and Active Directory
+- 802.1Q VLAN Trunking and Network Segmentation
+- Remote Access VPN with pfSense and OpenVPN
+- Guest Wi-Fi VLAN Segmentation and Captive Portal
+- Wazuh SIEM and Windows Endpoint Monitoring
+
+## Technologies Used
+
+Cisco IOS • pfSense • Active Directory • NPS • Aruba Wireless •
+Wazuh • Suricata • Wireshark • Kali Linux • Windows Server • VirtualBox
+
+
+
 ## Goal
 
 After earning my CompTIA Network+ and Security+ certifications, I wanted to gain more hands-on experience with networking and cybersecurity technologies while continuing my education. Building this virtualized lab allows me to practice configuring network devices, implementing security controls, and using tools commonly found in cybersecurity environments.
