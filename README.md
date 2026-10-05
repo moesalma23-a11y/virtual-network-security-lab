@@ -25,38 +25,6 @@ After earning my CompTIA Network+ and Security+ certifications, I wanted to gain
 
 ---
 
-## Step 1: Configure the Virtual Environment
-
-To begin, I built a small physical network using a Cisco Catalyst switch and a Windows desktop PC. The switch was connected to my home router for internet access, while my desktop was connected directly to the switch for management and testing purposes.
-
-I used a console cable to perform the initial switch configuration, including setting the hostname and configuring administrative credentials.
-
-![Switch Configuration](IMG_7419.jpeg)
-
-After completing the initial setup, I enabled SSH to allow secure remote management of the switch without requiring a console connection.
-
-![SSH Configuration](IMG_7423.jpeg)
-
-To verify connectivity, I successfully pinged the switch from my PC and confirmed that the switch had learned my device's MAC address by reviewing the ARP table.
-
-![Connectivity](IMG_7421.jpeg)
-
-For now, the switch remains separate from the virtual lab environment. In the future, I plan to install an additional network interface card (NIC) in my PC so pfSense can interact directly with my physical network infrastructure.
-
-I then installed pfSense in VirtualBox and configured it as the primary firewall and router for the lab environment. VirtualBox NAT was used to simulate WAN connectivity, while pfSense managed the internal networks.
-
-![PfSense](pfsense_lab1.jpg)
-
-To simulate an attacker system, I deployed a Kali Linux virtual machine through VirtualBox.
-
-![Kali Linux](./Screenshot%202026-06-10%20131121.png)
-
-I also deployed a Windows virtual machine to act as the target system. DHCP services were configured through pfSense to automatically assign IP addresses, and connectivity between the systems was verified through successful ping tests.
-
-![Kali Linux + Windows](./kalilinux_windows.jpg)
-
----
-
 # Lab 1: Blocking Unauthorized Network Reconnaissance with pfSense
 
 ## Objective
