@@ -1466,3 +1466,52 @@ After configuring the laptop, switch, and NPS server, the laptop connected to th
 ## Result
 
 The lab demonstrated how 802.1X, Cisco switching, NPS, and Active Directory can work together to provide centralized network authentication for a domain-connected Windows laptop.
+
+
+# Lab 16 - Defense in Depth Against a Simulated Drive-By Download
+
+## Objective
+
+The goal of this lab was to simulate a drive-by download using a Kali Linux Apache2 web server and demonstrate defense in depth using a Squid proxy and Windows Defender.
+
+## Squid Proxy Setup
+
+Squid was installed and started on the Ubuntu Server.
+
+![Squid Active](SQUID_ACTIVE.png)
+
+The Windows client was manually configured to use the Ubuntu Squid proxy.
+
+![Windows Proxy](WINDOWS_PROXY.png)
+
+Squid logs confirmed that traffic from the Windows client was passing through the proxy.
+
+![Squid Logs](SQUID_LOGS.png)
+
+## Simulated Drive-By Download
+
+The Apache2 webpage on Kali Linux was modified so that visiting the page automatically triggered a file download.
+
+![HTML Code](HTML_CODE.png)
+
+A harmless antivirus test file was used to simulate malicious content.
+
+During the first test, the proxy allowed the request, but Windows Defender detected and blocked the file.
+
+![Drive-By Virus](DRIVEBY_VIRUS.png)
+
+## Proxy Mitigation
+
+An ACL was added to Squid to block the malicious test file before it could reach the Windows endpoint.
+
+![Proxy ACL](PROXY_ACL.png)
+
+The second test showed that the proxy blocked the request before Windows Defender needed to intervene.
+
+## What I Learned
+
+This lab helped me understand how defense in depth works in practice. A proxy can inspect and control web requests before they reach an endpoint, while endpoint protection provides another layer if suspicious content still gets through. I also learned how Squid ACLs can be used to block specific web content and how proxy logs can be used to monitor client traffic.
+
+## Result
+
+The first test showed Windows Defender stopping the simulated malicious download. After the Squid ACL was added, the proxy stopped the file earlier before it reached the Windows system.
