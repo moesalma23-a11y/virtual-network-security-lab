@@ -16,7 +16,7 @@
 ## Technologies Used
 
 Cisco IOS • pfSense • Active Directory • NPS • Aruba Wireless •
-Wazuh • Suricata • Wireshark • Kali Linux • Windows Server • VirtualBox
+Wazuh • Suricata • Wireshark • Kali Linux • Windows Server • VirtualBox • Squid Proxy
 
 
 
