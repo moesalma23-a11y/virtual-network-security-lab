@@ -10,6 +10,7 @@
 - [Lab 12 - Guest Wi-Fi VLAN Segmentation and Captive Portal](#lab-12---guest-wi-fi-vlan-segmentation-and-captive-portal)
 - [Lab 14 - Active Directory Domain and Group Policy](#lab-14---active-directory-domain-and-group-policy)
 - [Lab 15 - 802.1X Authentication with NPS and Active Directory](#lab-15---8021x-authentication-with-nps-and-active-directory)
+-  [Lab 16 - Defense in Depth Against a Simulated Drive-By Download](#lab-16---defense-in-depth-against-a-simulated-drive-by-download)
 
 
 ## Technologies Used
