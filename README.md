@@ -1516,3 +1516,55 @@ This lab helped me understand how defense in depth works in practice. A proxy ca
 ## Result
 
 The first test showed Windows Defender stopping the simulated malicious download. After the Squid ACL was added, the proxy stopped the file earlier before it reached the Windows system.
+
+# Lab 17 - Implementing IPv6 in a Dual-Stack VLAN Network
+
+## Objective
+
+The goal of this lab was to add IPv6 to an existing VLAN while keeping IPv4 enabled, creating a dual-stack network.
+
+## IPv6 Configuration
+
+A static IPv6 address was configured on the pfSense LAB_WIFI interface.
+
+![IPv6 Static Configuration](IPV6_STATIC.png)
+
+Router Advertisements were then enabled so devices on the VLAN could use SLAAC to automatically generate their own IPv6 addresses.
+
+![Router Advertisement Settings](RA_SETTING.png)
+
+## Dual-Stack Clients
+
+Kali Linux successfully received both an IPv4 and IPv6 address.
+
+![Kali Dual Stack](IMG_0050.jpeg)
+
+An iPhone connected to the same network also received both an IPv4 and IPv6 address.
+
+![iPhone Dual Stack](IMG_0051.png)
+
+This confirmed that the VLAN was operating as a dual-stack network.
+
+## Router Solicitation and Advertisement
+
+Wireshark was used to capture the IPv6 neighbor discovery process.
+
+The client sent a Router Solicitation to:
+
+`ff02::2`
+
+This is the IPv6 multicast address used for all routers on the local link.
+
+The router then responded with a Router Advertisement containing the IPv6 prefix information needed for SLAAC.
+
+![Router Solicitation and Advertisement](IMG_0052.jpeg)
+
+## What I Learned
+
+This lab helped me understand how IPv4 and IPv6 can operate together on the same VLAN. I also learned how SLAAC allows devices to create their own IPv6 addresses using information provided by Router Advertisements.
+
+I also observed that Router Solicitations are sent to the `ff02::2` all-routers multicast address and that devices can receive IPv6 addressing without using DHCPv6.
+
+## Result
+
+IPv6 was successfully added to the VLAN without removing IPv4. Both Kali Linux and the iPhone received IPv4 and IPv6 addresses, confirming that the network was operating in dual-stack mode.
